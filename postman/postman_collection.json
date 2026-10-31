@@ -1,0 +1,491 @@
+{
+  "info": {
+    "_postman_id": "ae3db0fe-68c0-4c75-ac69-f9f0a5574911",
+    "name": "JobTrackr API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51851070",
+    "_collection_link": "https://go.postman.co/collection/51851070-ae3db0fe-68c0-4c75-ac69-f9f0a5574911?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "create 201",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 201\", () => {\r",
+              "    pm.response.to.have.status(201)\r",
+              "})\r",
+              "pm.collectionVariables.set(\"applicationId\", pm.response.json().id)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"company\": \"Infosys\",\r\n  \"role\": \"Baend Intern\",\r\n  \"status\": \"Applied\",\r\n  \"appliedOn\": \"2026-10-30\",\r\n  \"priority\": \"High\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get list 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get filter 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications?status=Applied&search=google",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "Applied"
+            },
+            {
+              "key": "search",
+              "value": "google"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get by id 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}\t",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}\t"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"Interview\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete 204",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 204\", () => {\r",
+              "    pm.response.to.have.status(204)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}\t",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}\t"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR post empty 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", () => {\r",
+              "    pm.response.to.have.status(400)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR get 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR patch 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"Offer\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR delete 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR unknown route 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/unknown",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "unknown"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "applicationId",
+      "value": ""
+    }
+  ]
+}
