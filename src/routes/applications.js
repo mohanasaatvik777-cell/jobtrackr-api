@@ -16,7 +16,10 @@ router.get("/", async (req, res) => {
         filter.$or = [{ company: { $regex: search.trim(), $options: "i" } }, { role: { $regex: search.trim(), $options: "i" } }]
     }
     const result = await Application.find(filter).populate("owner", "name email")
-    res.status(200).json(result)
+    res.status(200).json({
+        Total_application: result.length,
+        result
+    })
 })
 
 router.get("/:id", async (req, res) => {
@@ -36,18 +39,23 @@ router.delete("/:id", async (req, res) => {
     myjobs.splice(index, 1)
     res.status(204).send()
 })
-router.post("/", validateApplication, (req, res) => {
-    const { company, role, status, appliedOn, priority } = req.body
-    const id = Math.max(0, ...myjobs.map((j) => j.id)) + 1
-    const objj = {
-        id,
+router.post("/", async (req, res) => {
+    const { company, role, status, priority, salary, appliedOn } = req.body
+    const user = await User.findOne()
+    const result = await Application.create({
+        owner: user._id,
         company,
         role,
-        status, appliedOn, priority
-    }
-    myjobs.push(objj)
-    res.status(201).json(objj)
+        status,
+        priority,
+        salary,
+        appliedOn
+    })
+    res.status(201).json(result)
 })
+
+
+
 router.patch("/:id", (req, res) => {
     const id = Number(req.params.id)
     const item = myjobs.find((f) => f.id === id)
