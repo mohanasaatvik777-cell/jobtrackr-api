@@ -56,17 +56,24 @@ router.post("/", async (req, res) => {
 
 
 
-router.patch("/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const item = myjobs.find((f) => f.id === id)
-    if (!item) {
-        throw new ApiError(404, "Application not found")
+router.patch("/:id", async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const item = await Application.findById(id)
+        const update = ["company", "role", "status", "priority", "salary", "appliedOn"]
+        if (!item) {
+            throw new ApiError(404, "Application not found")
+        }
+        for (const field of update) {
+            if (req.body[field] !== undefined) {
+                item[field] = req.body[field]
+            }
+        }
+        await item.save()
+        res.status(200).json(item)
+    } catch (err) {
+        next(err)
     }
-    const allowed_list = ["company", "role", "status", "appliedOn", "priority"]
-    for (const field of allowed_list) {
-        if (req.body[field] !== undefined) item[field] = req.body[field]
-    }
-    res.status(200).json(item)
 
 })
 export default router 
