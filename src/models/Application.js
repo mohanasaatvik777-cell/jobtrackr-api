@@ -57,4 +57,6 @@ const applicationschema = new mongoose.Schema({
     },
     notes: [noteSchema]
 }, { timestamps: true })
+applicationschema.index({ owner: 1, status: 1 });
+
 export default mongoose.model('Application', applicationschema)
