@@ -30,14 +30,19 @@ router.get("/:id", async (req, res) => {
     }
     res.status(200).json(item)
 })
-router.delete("/:id", async (req, res) => {
-    const { id } = req.params
-    const item = await Application.findByIdAndDelete(id)
-    if (!item) {
-        throw new ApiError(404, "Application not found to delete")
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const item = await Application.findByIdAndDelete(id)
+        if (!item) {
+            throw new ApiError(404, "Application not found to delete")
+        }
+
+        res.status(204).send()
     }
-    myjobs.splice(index, 1)
-    res.status(204).send()
+    catch (err) {
+        next(err)
+    }
 })
 router.post("/", async (req, res) => {
     const { company, role, status, priority, salary, appliedOn } = req.body
