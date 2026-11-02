@@ -81,4 +81,18 @@ router.patch("/:id", async (req, res, next) => {
     }
 
 })
+router.post("/:id/notes", async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const item = await Application.findById(id)
+        if (!item) {
+            throw new ApiError(404, "Application not found")
+        }
+        item.notes.push({ text: req.body.text })
+        await item.save()
+        res.status(200).json(item)
+    } catch (err) {
+        next(err)
+    }
+})
 export default router 
