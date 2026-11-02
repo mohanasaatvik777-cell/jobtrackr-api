@@ -2,23 +2,22 @@ import express from 'express'
 import myjobs from '../data/applications.js'
 import ApiError from '../utils/ApiError.js'
 import validateApplication from '../middleware/validateApplication.js'
-
+import Application from '../models/Application.js'
 const router = express.Router()
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+
     const { status, search } = req.query
-    let result = [...myjobs]
+    const filter = {}
     if (status) {
-        result = result.filter((s) => s.status.toLowerCase() === status.toLowerCase())
+        filter.status = status
     }
     if (search) {
-        result = result.filter((f) => {
-            const com = f.company.toLowerCase().includes(search.trim().toLowerCase())
-            const rol = f.role.toLowerCase().includes(search.trim().toLowerCase())
-            return com || rol
-        })
+        filter.$or = [{ company: { $regex: search.trim(), $options: "i" } }, { role: { $regex: search.trim(), $options: "i" } }]
     }
+    const result = await Application.find(filter).populate("owner", "name email")
     res.status(200).json(result)
 })
+
 router.get("/:id", (req, res) => {
     const id = Number(req.params.id)
     const item = myjobs.find((f) => f.id === id)
