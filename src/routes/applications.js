@@ -21,7 +21,23 @@ router.get("/", async (req, res) => {
         result
     })
 })
-
+router.get("/stats", async (req, res, next) => {
+    try {
+        const user = await User.findOne()
+        const rows = await Application.aggregate([
+            { $match: { owner: user._id } },
+            { $group: { _id: "$status", count: { $sum: 1 }, avgSalary: { $avg: "$salary" } } },
+            { $sort: { count: -1 } }
+        ])
+        if (!rows) {
+            throw new ApiError(404, "No applications found for the user")
+        }
+        const result = rows.reduce((sum, r) => sum + r.count, 0)
+        res.status(200).json({ total: result, byStatus: rows })
+    } catch (err) {
+        next(err)
+    }
+})
 router.get("/:id", async (req, res) => {
     const { id } = req.params
     const item = await Application.findById(id).populate("owner", "name email")
@@ -95,4 +111,5 @@ router.post("/:id/notes", async (req, res, next) => {
         next(err)
     }
 })
+
 export default router 
