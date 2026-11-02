@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-const noteSchema = new mongoose.SchemaTypes({
+const noteSchema = new mongoose.Schema({
     text: {
         type: String,
         required: true,
@@ -32,7 +32,7 @@ const applicationschema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: { values: ["Applied", "Interviewing", "Offer", "Rejected"], message: "Status must be Applied, Interview, Offer or Rejected" },
+        enum: { values: ["Applied", "Interview", "Offer", "Rejected"], message: "Status must be Applied, Interview, Offer or Rejected" },
         default: "Applied"
     },
     priority: {

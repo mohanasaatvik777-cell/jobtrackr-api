@@ -1,7 +1,7 @@
 import express from 'express'
-import myjobs from '../data/applications.js'
+
 import ApiError from '../utils/ApiError.js'
-import validateApplication from '../middleware/validateApplication.js'
+
 import Application from '../models/Application.js'
 import User from '../models/User.js'
 const router = express.Router()
