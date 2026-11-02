@@ -3,6 +3,7 @@ import myjobs from '../data/applications.js'
 import ApiError from '../utils/ApiError.js'
 import validateApplication from '../middleware/validateApplication.js'
 import Application from '../models/Application.js'
+import User from '../models/User.js'
 const router = express.Router()
 router.get("/", async (req, res) => {
 
@@ -18,16 +19,18 @@ router.get("/", async (req, res) => {
     res.status(200).json(result)
 })
 
-router.get("/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const item = myjobs.find((f) => f.id === id)
-    if (!item) throw new ApiError(404, "Application not found")
+router.get("/:id", async (req, res) => {
+    const { id } = req.params
+    const item = await Application.findById(id).populate("owner", "name email")
+    if (!item) {
+        throw new ApiError(404, "Application not found")
+    }
     res.status(200).json(item)
 })
-router.delete("/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const index = myjobs.findIndex((f) => f.id === id)
-    if (index === -1) {
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params
+    const item = await Application.findByIdAndDelete(id)
+    if (!item) {
         throw new ApiError(404, "Application not found to delete")
     }
     myjobs.splice(index, 1)
