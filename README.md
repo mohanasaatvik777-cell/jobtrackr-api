@@ -28,3 +28,37 @@ What I observed. Use your real results from the two-tab test:
 
 Test with /api/slow: what did /api/applications i observed that while the slow running the other executes because node has single thread and it will not wait for the things that takes time, it keeps them in and when completed as a callback it call and executes.
 Test with /api/block: and /api/applications, 
+
+
+# Add Day 6 below the existing README
+### Setup
+1.Add MONGODB_URI to the .env keys (placeholder only, never the real URI).
+2.npm run seed creates 2 users and 1,000 applications.
+3.npm run dev starts the server after the database connects.
+### Data model
+1.Notes are embedded: they belong to one application and are always read with it, so one query gets both.
+2.Owner is referenced: one user has many applications and can change on its own, so we store only the user’s _id and use populate('owner', 'name email').
+### When I would choose SQL
+1.SQL: data with many relationships and joins, strict consistency (payments, banking).
+2.MongoDB: flexible or changing shapes, nested data read together (like applications with notes).
+### Index: COLLSCAN vs IXSCAN
+Query: find({ owner, status: "Interview" }).explain("executionStats")
+Means without an index. Mongodb reades every documents which takes extra time i.e COLLSCAN. After the index in the Mongodb it is IXSCAN with the less time of finding as compared to the COLLSCAN.
+
+	                                 Stage	   Docs examined 	Returned
+Before index	                     COLLSCAN	1001              135
+After index { owner: 1, status: 1 }	 IXSCAN	    135	              135
+
+### Pagination
+1.GET /api/applications?page=2&limit=10 returns data, page, limit, total, totalPages.
+2.Why skip gets slow: MongoDB still walks past every skipped document, so a very high page does a lot of wasted work.
+3.Alternative: range (cursor) pagination: remember the last _id and query { _id: { $lt: lastId } } with limit.
+### Stats
+GET /api/applications/stats uses an aggregation ($match, $group, $sort) to return the count per status and the average salary of offers
+### Errors
+Bad id (/abc): 400 “Invalid id”.
+Invalid fields: 400 with a message per field.
+Valid but unknown id: 404 “Application not found”.
+Same shape as always: { success: false, message, errors }
+### Notes
+POST /api/applications/:id/notes with { "text": "..." } adds an embedded note
