@@ -5,22 +5,7 @@ import ApiError from '../utils/ApiError.js'
 import Application from '../models/Application.js'
 import User from '../models/User.js'
 const router = express.Router()
-router.get("/", async (req, res) => {
 
-    const { status, search } = req.query
-    const filter = {}
-    if (status) {
-        filter.status = status
-    }
-    if (search) {
-        filter.$or = [{ company: { $regex: search.trim(), $options: "i" } }, { role: { $regex: search.trim(), $options: "i" } }]
-    }
-    const result = await Application.find(filter).populate("owner", "name email")
-    res.status(200).json({
-        Total_application: result.length,
-        result
-    })
-})
 router.get("/stats", async (req, res, next) => {
     try {
         const user = await User.findOne()
@@ -111,5 +96,31 @@ router.post("/:id/notes", async (req, res, next) => {
         next(err)
     }
 })
+router.get("/", async (req, res, next) => {
+    try {
+        const page = Math.max(parseInt(req.query.page) || 1, 1)
+        const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 100)
+        const skip = (page - 1) * limit
+        const { status, search } = req.query
+        const filter = {}
+        if (req.query.status) {
+            filter.status = req.query.status
+        }
 
+        if (search) {
+            filter.$or = [{ company: { $regex: search.trim(), $options: "i" } }, { role: { $regex: search.trim(), $options: "i" } }]
+        }
+        const [data, total] = await Promise.all([
+            Application.find(filter).sort({ _id: -1 }).skip(skip).limit(limit).populate("owner", "name email"),
+            Application.countDocuments(filter)
+        ])
+
+
+        res.status(200).json({
+            data, page, limit, total, totalPages: Math.ceil(total / limit)
+        })
+    } catch (err) {
+        next(err)
+    }
+})
 export default router 
