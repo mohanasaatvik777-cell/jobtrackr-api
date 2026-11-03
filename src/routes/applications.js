@@ -23,13 +23,18 @@ router.get("/stats", async (req, res, next) => {
         next(err)
     }
 })
-router.get("/:id", async (req, res) => {
-    const { id } = req.params
-    const item = await Application.findById(id).populate("owner", "name email")
-    if (!item) {
-        throw new ApiError(404, "Application not found")
+router.get("/:id", async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const item = await Application.findById(id).populate("owner", "name email")
+        if (!item) {
+            throw new ApiError(404, "Application not found")
+        }
+        res.status(200).json(item)
+    } catch (err) {
+        next(err)
     }
-    res.status(200).json(item)
+
 })
 router.delete("/:id", async (req, res, next) => {
     try {
@@ -45,19 +50,24 @@ router.delete("/:id", async (req, res, next) => {
         next(err)
     }
 })
-router.post("/", async (req, res) => {
-    const { company, role, status, priority, salary, appliedOn } = req.body
-    const user = await User.findOne()
-    const result = await Application.create({
-        owner: user._id,
-        company,
-        role,
-        status,
-        priority,
-        salary,
-        appliedOn
-    })
-    res.status(201).json(result)
+router.post("/", async (req, res, next) => {
+    try {
+        const { company, role, status, priority, salary, appliedOn } = req.body
+        const user = await User.findOne()
+        const result = await Application.create({
+            owner: user._id,
+            company,
+            role,
+            status,
+            priority,
+            salary,
+            appliedOn
+        })
+        res.status(201).json(result)
+    } catch (err) {
+        next(err)
+    }
+
 })
 
 

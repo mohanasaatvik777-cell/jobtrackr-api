@@ -1,0 +1,649 @@
+{
+  "info": {
+    "_postman_id": "c4d7312f-b82c-496e-aa58-085be1373fb3",
+    "name": "JobTrackr  API - Day6",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51851070",
+    "_collection_link": "https://go.postman.co/collection/51851070-c4d7312f-b82c-496e-aa58-085be1373fb3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "create 201",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 201\", () => {\r",
+              "    pm.response.to.have.status(201)\r",
+              "})\r",
+              "pm.collectionVariables.set(\"applicationId\", pm.response.json()._id)"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"company\": \"Infosys\",\r\n  \"role\": \"Backend Intern\",\r\n  \"status\": \"Applied\",\r\n  \"priority\": \"High\",\r\n  \"salary\": 500000\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "list 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "pm.test(\"has data and totalPages\", () => {\r",
+              "    const body = pm.response.json()\r",
+              "    pm.expect(body).to.have.property(\"data\")\r",
+              "    pm.expect(body).to.have.property(\"totalPages\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "list page 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "pm.test(\"has data and totalPages\", () => {\r",
+              "    const body = pm.response.json()\r",
+              "    pm.expect(body).to.have.property(\"data\")\r",
+              "    pm.expect(body).to.have.property(\"totalPages\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications?page=2&limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "2"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "list filter 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})\r",
+              "pm.test(\"has data and totalPages\", () => {\r",
+              "    const body = pm.response.json()\r",
+              "    pm.expect(body).to.have.property(\"data\")\r",
+              "    pm.expect(body).to.have.property(\"totalPages\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications?status=Interview&search=zoho",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "Interview"
+            },
+            {
+              "key": "search",
+              "value": "zoho"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stats 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => {\r",
+              "    pm.response.to.have.status(200)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get one 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "patch 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"Interview\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "add note 201",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"text\": \"Called HR\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}/notes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}",
+            "notes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete 204",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR create empty 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", () => {\r",
+              "    pm.response.to.have.status(400)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR bad id 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", () => {\r",
+              "    pm.response.to.have.status(400)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/abc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "abc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR get missing 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{missingId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{missingId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR patch bad status 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", () => {\r",
+              "    pm.response.to.have.status(400)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"Pending\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}\t",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}\t"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR note empty 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/applications/{{applicationId}}/notes\t",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "applications",
+            "{{applicationId}}",
+            "notes\t"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ERR unknown route 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 404\", () => {\r",
+              "    pm.response.to.have.status(404)\r",
+              "})\r",
+              "pm.test(\"success is false\", () => {\r",
+              "    pm.expect(pm.response.json().success).to.eql(false)\r",
+              "})\r",
+              "pm.test(\"errors object exists\", () => {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"errors\")\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/unknown",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "unknown"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "applicationId",
+      "value": ""
+    }
+  ]
+}
