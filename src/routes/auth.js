@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-
+import bcrypt from 'bcrypt'
 import User from '../models/User.js'
 import ApiError from '../utils/ApiError.js'
 import { Router } from 'express'
@@ -26,6 +26,27 @@ router.post("/register", async (req, res, next) => {
 
     }
     catch (err) {
+        next(err)
+    }
+})
+router.post("/login", async (req, res, next) => {
+    try {
+        const { email, password } = req.body
+        if (typeof email !== "string" || typeof password !== "string") {
+            throw new ApiError(400, "User,Role or Password is missing")
+        }
+
+        const user = await User.findOne({ email }).select("+password")
+        if (user === null || !(await bcrypt.compare(password, user.password))) {
+            throw new ApiError(401, "Invalid email or password")
+        }
+        const token = signToken(user)
+        res.status(200).json({
+            token, user: {
+                id: user._id, name: user.name, email: user.email, role: user.role
+            }
+        })
+    } catch (err) {
         next(err)
     }
 })
