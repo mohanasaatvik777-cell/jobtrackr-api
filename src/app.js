@@ -4,11 +4,13 @@ import errorHandler from './middleware/errorHandler.js'
 import logger from './middleware/logger.js'
 import notFound from './middleware/notFound.js'
 import router from './routes/applications.js'
+import authRouter from './routes/auth.js'
 const app = express()
 app.use(cors({ origin: process.env.CLIENT_URL }))
 app.use(express.json())
 app.use(logger)
 app.use("/api/applications", router)
+app.use("/api/auth", authRouter)
 app.get("/api/slow", (req, res) => {
     setTimeout(() => {
         res.status(200).json({ message: "Slow response after 3 seconds" })
@@ -26,3 +28,4 @@ app.use(errorHandler)
 
 
 export default app
+
