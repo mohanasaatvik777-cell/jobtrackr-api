@@ -4,8 +4,9 @@ import ApiError from '../utils/ApiError.js'
 
 import Application from '../models/Application.js'
 import User from '../models/User.js'
+import { protect } from '../middleware/auth.js'
 const router = express.Router()
-
+router.use(protect)
 router.get("/stats", async (req, res, next) => {
     try {
         const user = await User.findOne()
@@ -26,7 +27,7 @@ router.get("/stats", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     try {
         const { id } = req.params
-        const item = await Application.findById(id).populate("owner", "name email")
+        const item = await Application.findOne({ _id: req.params.id, owner: req.user.id }).populate("owner", "name email")
         if (!item) {
             throw new ApiError(404, "Application not found")
         }
@@ -39,7 +40,7 @@ router.get("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
     try {
         const { id } = req.params
-        const item = await Application.findByIdAndDelete(id)
+        const item = await Application.findOneAndDelete({ _id: req.params.id, owner: req.user.id })
         if (!item) {
             throw new ApiError(404, "Application not found to delete")
         }
@@ -52,16 +53,11 @@ router.delete("/:id", async (req, res, next) => {
 })
 router.post("/", async (req, res, next) => {
     try {
-        const { company, role, status, priority, salary, appliedOn } = req.body
-        const user = await User.findOne()
+
+
         const result = await Application.create({
-            owner: user._id,
-            company,
-            role,
-            status,
-            priority,
-            salary,
-            appliedOn
+            owner: req.user.id,
+            ...req.body
         })
         res.status(201).json(result)
     } catch (err) {
@@ -75,7 +71,7 @@ router.post("/", async (req, res, next) => {
 router.patch("/:id", async (req, res, next) => {
     try {
         const { id } = req.params
-        const item = await Application.findById(id)
+        const item = await Application.findOne({ _id: id, owner: req.user.id })
         const update = ["company", "role", "status", "priority", "salary", "appliedOn"]
         if (!item) {
             throw new ApiError(404, "Application not found")
@@ -112,7 +108,7 @@ router.get("/", async (req, res, next) => {
         const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 100)
         const skip = (page - 1) * limit
         const { status, search } = req.query
-        const filter = {}
+        const filter = { owner: req.user.id }
         if (req.query.status) {
             filter.status = req.query.status
         }
