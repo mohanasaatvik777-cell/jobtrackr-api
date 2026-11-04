@@ -1,7 +1,7 @@
 import express from 'express'
 
 import ApiError from '../utils/ApiError.js'
-
+import mongoose from 'mongoose'
 import Application from '../models/Application.js'
 import User from '../models/User.js'
 import { protect } from '../middleware/auth.js'
@@ -9,9 +9,9 @@ const router = express.Router()
 router.use(protect)
 router.get("/stats", async (req, res, next) => {
     try {
-        const user = await User.findOne()
+
         const rows = await Application.aggregate([
-            { $match: { owner: user._id } },
+            { $match: { owner: new mongoose.Types.ObjectId(req.user.id) } },
             { $group: { _id: "$status", count: { $sum: 1 }, avgSalary: { $avg: "$salary" } } },
             { $sort: { count: -1 } }
         ])
@@ -91,7 +91,7 @@ router.patch("/:id", async (req, res, next) => {
 router.post("/:id/notes", async (req, res, next) => {
     try {
         const { id } = req.params
-        const item = await Application.findById(id)
+        const item = await Application.findOne({ _id: req.params.id, owner: req.user.id })
         if (!item) {
             throw new ApiError(404, "Application not found")
         }
