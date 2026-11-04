@@ -6,7 +6,9 @@ import notFound from './middleware/notFound.js'
 import router from './routes/applications.js'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
+import helmet from 'helmet'
 const app = express()
+app.use(helmet())
 app.use(cors({ origin: process.env.CLIENT_URL }))
 app.use(express.json())
 app.use(logger)

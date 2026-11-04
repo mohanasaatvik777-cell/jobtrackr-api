@@ -4,6 +4,7 @@ import User from '../models/User.js'
 import ApiError from '../utils/ApiError.js'
 import { Router } from 'express'
 import { protect } from '../middleware/auth.js'
+import { loginLimiter } from '../middleware/rateLimiter.js'
 const router = Router()
 const signToken = (user) => {
     return jwt.sign({ id: user._id.toString(), role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
@@ -30,7 +31,7 @@ router.post("/register", async (req, res, next) => {
         next(err)
     }
 })
-router.post("/login", async (req, res, next) => {
+router.post("/login", loginLimiter, async (req, res, next) => {
     try {
         const { email, password } = req.body
         if (typeof email !== "string" || typeof password !== "string") {
@@ -39,7 +40,7 @@ router.post("/login", async (req, res, next) => {
 
         const user = await User.findOne({ email }).select("+password")
         if (user === null || !(await bcrypt.compare(password, user.password))) {
-            throw new ApiError(409, "Invalid email or password")
+            throw new ApiError(401, "Invalid email or password")
         }
         const token = signToken(user)
         res.status(200).json({

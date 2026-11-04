@@ -109,6 +109,10 @@ router.get("/", async (req, res, next) => {
         const skip = (page - 1) * limit
         const { status, search } = req.query
         const filter = { owner: req.user.id }
+
+        if (status !== undefined && typeof status !== 'string') {
+            throw new ApiError(400, 'Invalid status')
+        }
         if (req.query.status) {
             filter.status = req.query.status
         }
