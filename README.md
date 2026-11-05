@@ -30,7 +30,7 @@ Test with /api/slow: what did /api/applications i observed that while the slow r
 Test with /api/block: and /api/applications, 
 
 
-# Add Day 6 below the existing README
+#  Day 6 below the existing README
 ### Setup
 1.Add MONGODB_URI to the .env keys (placeholder only, never the real URI).
 2.npm run seed creates 2 users and 1,000 applications.
@@ -62,3 +62,34 @@ Valid but unknown id: 404 “Application not found”.
 Same shape as always: { success: false, message, errors }
 ### Notes
 POST /api/applications/:id/notes with { "text": "..." } adds an embedded note
+
+## Day 7
+# Day 7: Secure API
+
+## Helmet headers
+Helmet is added with `app.use(helmet())`. Three headers it sets,
+seen in my Postman response:
+- `X-Content-Type-Options: nosniff`: 
+- `X-Frame-Options: SAMEORIGIN`: 
+- `Strict-Transport-Security`: 
+
+## XSS test
+I saved a note containing `<img src=x onerror=alert(1)>`.
+The API returned it unchanged as a plain string in JSON.
+
+Why React is safe: React escapes any text placed in JSX, so the tag is
+shown as visible text and never becomes a real element.
+
+What makes it dangerous: `dangerouslySetInnerHTML` inserts the string as
+raw HTML, so the onerror would run.
+## RateLimiter
+It is used to restrict particular user that is how many requests the user 
+can make in a particular amount of time.
+That was implemented in the screenshot it shows 429 with wrong passoword,
+where after trying for the 5 attempts for the 6 th attempt it shows the 429 as the
+ratelimit implemented successfully.
+
+## NoSqlInjection
+There are some commands in the mongodb so that by executing them
+will get the permission like accessing the application of other thing like admin,
+there will be some command, so to sanitize them we will using the sanitizeFilter inside the db.js so that it will detect them easily.
