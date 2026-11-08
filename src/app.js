@@ -8,10 +8,21 @@ import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import helmet from 'helmet'
 const app = express()
+app.set("trust proxy", 1)
 app.use(helmet())
-app.use(cors({ origin: process.env.CLIENT_URL }))
+const allowedOrigins = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',').map(url => url.trim())
+    : [];
+app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 app.use(logger)
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        uptime: process.uptime()
+    })
+})
+
 app.use("/api/applications", router)
 app.use("/api/auth", authRouter)
 app.use("/api/admin", adminRouter)
