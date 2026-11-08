@@ -10,9 +10,11 @@ import helmet from 'helmet'
 const app = express()
 app.set("trust proxy", 1)
 app.use(helmet())
-const allowedOrigins = process.env.CLIENT_URL
-    ? process.env.CLIENT_URL.split(',').map(url => url.trim())
-    : [];
+// Provide an empty string default if the environment variable is missing
+const allowedOrigins = (process.env.CLIENT_URL || '')
+    .split(',')
+    .map(url => url.trim());
+
 app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 app.use(logger)
