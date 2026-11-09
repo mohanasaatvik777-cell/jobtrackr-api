@@ -93,3 +93,8 @@ ratelimit implemented successfully.
 There are some commands in the mongodb so that by executing them
 will get the permission like accessing the application of other thing like admin,
 there will be some command, so to sanitize them we will using the sanitizeFilter inside the db.js so that it will detect them easily.
+
+# AI INTEGRATION IN JOBTRACKR DAY-01
+## Why the API key stays on the server
+1. When we write in the frontend(react) browser side, the react code downloads to the user's browser, so anyone can read it, and utilize and spend our money.
+2.Everything in the browser will visible at the Network tab.
