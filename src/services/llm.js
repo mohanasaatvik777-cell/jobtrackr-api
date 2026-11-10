@@ -2,10 +2,10 @@ import { Groq } from 'groq-sdk';
 import "dotenv/config"
 
 
-export async function callLLM(system, user, temperature) {
+export async function callLLM(system, user, temperature, jsonMode = false) {
     const client = new Groq({ apiKey: process.env.LLM_API_KEY })
     const starttime = new Date()
-    const completion = await client.chat.completions.create({
+    const options = {
         model: process.env.LLM_MODEL,
         temperature: temperature,
         max_completion_tokens: 500,
@@ -13,8 +13,11 @@ export async function callLLM(system, user, temperature) {
             { role: 'system', content: system },
             { role: 'user', content: user },
         ],
-
-    })
+    }
+    if (jsonMode === true) {
+        options.response_format = { type: 'json_object' }
+    }
+    const completion = await client.chat.completions.create(options)
     const ms = Date.now() - starttime
     return {
         text: completion.choices[0].message.content,
