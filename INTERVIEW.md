@@ -23,3 +23,18 @@ jwt is a token which will be last for the amount of time we keep it to not get e
 XSS (Cross-Site Scripting) happens when an attacker’s script runs on your webpage. Defend by escaping output, avoiding risky code like dangerouslySetInnerHTML, and using security tools like Helmet or Content Security Policy (CSP).
 
 CSRF (Cross-Site Request Forgery) is when another site tricks your browser into sending a request using your login cookie. Defend by setting cookies with SameSite attribute, using CSRF tokens, and not relying only on cookies for authentication.
+
+
+# Interview Answers
+
+## 1. Token, context window, knowledge cutoff, hallucination
+
+Ans. Token is nothing but a small text or a part of text. The number of tokens the model see at a time is called context window. The LLM is trained on upto certain date, after that what happens is notknow to the LLM is called as knowledge cutoff,
+when they are trained for upto certain date then after we may ask the question it gives the ans confidental is because it invent the things that they have been trained on is called as hallucination.
+
+## 2. Temperature
+
+Ans. Temperature is used the control the randomness of the llm response. The range is of 0 2. when it is 0(deterministic) when it is 1(creative) means it things out of box.
+
+## 3. Choosing a model and controlling cost
+Ans. We need to choose a model based on our task purpose only. Like sonnet 5 in cluade is used for multiple purpose. While Haiku5.5 is used for normall task like the summarize like that but for a Opus 5.5 for more creative work inventions like this. We need to control the amount by calculating at every time.
