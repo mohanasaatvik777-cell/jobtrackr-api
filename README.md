@@ -148,4 +148,19 @@ The LLM provider is Groq, on its free tier with no payment method attached, so n
 
 ## Why the API key stays on the server
 
-React code is downloaded into the user's browser, so anyone can open it and read what is inside. Every request the browser sends is also visible in the Network tab, and environment variables used in a React build are copied into the JavaScript, which makes them public. If the key were in React, anyone could copy it and use my quota or money. So
+React code is downloaded into the user's browser, so anyone can open it and read what is inside. Every request the browser sends is also visible in the Network tab, and environment variables used in a React build are copied into the JavaScript, which makes them public. If the key were in React, anyone could copy it and use my quota or money. So the key lives only in the server's `.env`, the browser calls my Express API, and only the server calls the LLM.
+
+## How it is built
+
+- `src/services/llm.js` is the only file that calls the LLM provider, so the rest of the code does not depend on the provider.
+- Prompts are text files in `src/prompts/`, not inside the code. Each one is a system prompt with the rules, and the user's input is sent as a separate user message.
+- For `rewrite`, I compared a zero-shot and a few-shot prompt on 3 lines and kept the better one (see EXPERIMENTS.md).
+- Inputs over 6,000 characters are rejected with 400 before the model is called, so rejected requests cost nothing.
+- `extract` uses the provider's JSON mode. The server then parses the answer and checks every field and type itself, and it keeps only the six expected keys. If the answer is invalid it retries once, then returns 502 with a clear message.
+- To reduce hallucination, the `extract` prompt tells the model to return `null` for anything not in the text. I tested this with a job description that has no salary, and `salaryRange` came back `null`.
+- Every AI call is saved in the database with the user, endpoint, model, input tokens, output tokens, time taken and cost. Cost is calculated as tokens divided by 1,000,000 times the price per million tokens, for input and output separately. `GET /api/ai/usage` adds up today's records for the logged-in user.
+
+## Experiments and interview answers
+
+- `EXPERIMENTS.md`: zero-shot vs few-shot for `rewrite`, and temperature 0 vs temperature 1 for `summarize`.
+- `INTERVIEW.md`: short answers on tokens, hallucination, temperature, model choice and cost.

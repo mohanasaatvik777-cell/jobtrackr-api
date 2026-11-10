@@ -8,6 +8,8 @@ import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import helmet from 'helmet'
 import aiRoutes from './routes/ai.js'
+import chatRouter from './routes/chat.js'
+
 const app = express()
 app.set("trust proxy", 1)
 app.use(helmet())
@@ -26,6 +28,7 @@ app.get("/api/health", (req, res) => {
     })
 })
 app.use("/api/ai", authRouter, aiRoutes)
+app.use("/api/chat", authRouter, chatRouter)
 app.use("/api/applications", router)
 app.use("/api/auth", authRouter)
 app.use("/api/admin", adminRouter)
