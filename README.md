@@ -98,3 +98,54 @@ there will be some command, so to sanitize them we will using the sanitizeFilter
 ## Why the API key stays on the server
 1. When we write in the frontend(react) browser side, the react code downloads to the user's browser, so anyone can read it, and utilize and spend our money.
 2.Everything in the browser will visible at the Network tab.
+
+
+# JobTrackr API
+
+JobTrackr is a job application tracker. This is its backend, built with Node.js, Express and MongoDB. Users register, log in and track their job applications. Day 10 adds three AI tools that help with job descriptions and resume lines.
+
+## AI features (Day 10)
+
+All AI routes are protected. Send `Authorization: Bearer <token>` with every request. The token comes from `POST /api/auth/login`.
+
+| Route | Input | Output |
+|-------|-------|--------|
+| POST /api/ai/summarize | `jobDescription` | 5 bullet points: role, must-have skills, nice-to-haves, responsibilities, red flags |
+| POST /api/ai/rewrite | `text`, `tone` (formal, confident or concise) | one rewritten resume line, 30 words or fewer |
+| POST /api/ai/extract | `jobDescription` | JSON with company, role, location, skills, minYears, salaryRange |
+| GET /api/ai/usage | none | today's number of calls, tokens and cost for the logged-in user |
+
+Example `extract` response:
+
+{ "company": "Acme Tech", "role": "Backend Developer", "location": "Hyderabad", "skills": ["Node.js", "Express", "MongoDB"], "minYears": 2, "salaryRange": null }
+
+If something is not written in the job description, its value is `null`. The API never guesses.
+
+### Error codes
+
+| Code | Meaning |
+|------|---------|
+| 400 | Input is missing, is not text, is longer than 6,000 characters, or the tone is not allowed. The model is not called. |
+| 401 | Missing or invalid token |
+| 502 | The AI service failed, or `extract` returned invalid data twice |
+
+## Setup
+
+1. Run `npm install`.
+2. Copy `.env.example` to `.env` and fill in the values.
+3. Run `npm run dev`. The API starts on http://localhost:5000.
+
+Environment variables for the AI features:
+
+- `LLM_API_KEY`: your Groq API key
+- `LLM_MODEL`: the model id to use
+- `LLM_PRICE_INPUT_PER_M`: model price per 1 million input tokens, in dollars
+- `LLM_PRICE_OUTPUT_PER_M`: model price per 1 million output tokens, in dollars
+
+The other variables (database connection, `JWT_SECRET`, `JWT_EXPIRES_IN`, and so on) are listed in `.env.example`.
+
+The LLM provider is Groq, on its free tier with no payment method attached, so no charges are possible. The cost shown in the usage log is still calculated from the model's listed price per million tokens.
+
+## Why the API key stays on the server
+
+React code is downloaded into the user's browser, so anyone can open it and read what is inside. Every request the browser sends is also visible in the Network tab, and environment variables used in a React build are copied into the JavaScript, which makes them public. If the key were in React, anyone could copy it and use my quota or money. So
