@@ -40,11 +40,27 @@ export async function callChat(system, arraymsg, temperature, max_output_tokens)
     }
 
     const completion = await client.chat.completions.create(options)
-    const ms = Date() - starttime
+    const ms = Date.now() - starttime
     return {
         text: completion.choices[0].message.content,
         inputTokens: completion.usage.prompt_tokens,
         outputTokens: completion.usage.completion_tokens,
         ms: ms
     }
+}
+export async function callChatStream(system, arraymsg, temperature, max_output_tokens, signal) {
+    const client = new Groq({ apiKey: process.env.LLM_API_KEY })
+    const starttime = new Date()
+    const options = {
+        model: process.env.LLM_MODEL,
+        temperature: temperature,
+        max_completion_tokens: max_output_tokens,
+        messages: [
+            { role: 'system', content: system },
+            ...arraymsg
+        ],
+        stream: true
+    }
+    const completion = await client.chat.completions.create(options, { signal })
+    return completion
 }
