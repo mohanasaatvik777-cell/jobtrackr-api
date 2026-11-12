@@ -9,7 +9,7 @@ const aiUsageSchema = new mongoose.Schema({
     endpoint: {
         type: String,
         required: true,
-        enum: ["summarize", "rewrite", "extract"],
+        enum: ["rewrite", "extract", "chat", "summary"],
 
     },
     model: {

@@ -7,7 +7,9 @@ import { extractchecker } from '../utils/extract.js'
 import { logUsage } from '../services/usage.js'
 import AiUsage from '../models/AiUsage.js'
 import mongoose from 'mongoose'
+
 const router = Router()
+
 router.use(protect)
 router.post("/summarize", async (req, res) => {
     const { jobDescription } = req.body
@@ -53,7 +55,7 @@ router.post("/rewrite", async (req, res) => {
 })
 router.post("/extract", async (req, res) => {
     const { jobDescription } = req.body
-    const job_res = await validateText(jobDescription, "jobDescription")
+    const job_res = validateText(jobDescription, "jobDescription")
     if (job_res !== null) {
         return res.status(400).json({ error: job_res })
     }

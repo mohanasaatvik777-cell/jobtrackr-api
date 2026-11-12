@@ -34,6 +34,7 @@ const conversationSchema = new mongoose.Schema({
     summary: {
         type: String,
         default: ""
-    }
+    },
+    summarizedCount: { type: Number, default: 0 },
 }, { timestamps: true })
 export default mongoose.model("Conversation", conversationSchema)
